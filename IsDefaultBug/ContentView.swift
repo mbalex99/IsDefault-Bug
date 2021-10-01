@@ -65,8 +65,13 @@ struct ContentView: View {
             VStack(alignment: .leading) {
                 if let car = viewModel.car {
                     Text("_id: \(car["_id"].stringValue)")
-                    Text("color: \(car["color"].string ?? "color is missing and returning nil")")
-                    Text("mileage: \(car["mileage"].float ?? "mileage is missing and returning nil")")
+                    Text("color: \(car["color"].string ?? "nil")")
+                    if let mileage = car["mileage"].float {
+                        Text("mileage: \(mileage)")
+                    } else {
+                        Text("mileage: nil")
+                    }
+
                 } else {
                     Text("No car document, no value, no id")
                 }
