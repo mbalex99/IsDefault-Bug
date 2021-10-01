@@ -15,6 +15,7 @@ struct ContentView: View {
 
     class ViewModel: ObservableObject {
         @Published var isShowingPeersPage = false
+        @Published var isSyncEnabled = false
         @Published var car: DittoDocument?
 
         let faker = Faker()
@@ -26,6 +27,13 @@ struct ContentView: View {
                 .map{ $0.document }
                 .assign(to: \.car, on: self)
                 .store(in: &cancellables)
+
+            DittoManager.shared
+                .isSyncEnabled
+                .assign(to: \.isSyncEnabled, on: self)
+                .store(in: &cancellables)
+
+            attemptInsertDefault()
         }
 
         func showPeersPage() {
@@ -44,6 +52,14 @@ struct ContentView: View {
                 .update { mutableDoc in
                     mutableDoc?["mileage"].set(Int.random(in: 0..<1000000))
                 }
+        }
+
+        func toggleSync() {
+            if DittoManager.shared.isSyncEnabled.value {
+                DittoManager.shared.stopSync()
+            } else {
+                DittoManager.shared.startSync()
+            }
         }
 
         func attemptInsertDefault() {
@@ -78,6 +94,11 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Remote Peers") {
                         viewModel.showPeersPage()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("\(viewModel.isSyncEnabled ? "Sync Enabled" : "Sync Disabled")") {
+                        viewModel.toggleSync()
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
