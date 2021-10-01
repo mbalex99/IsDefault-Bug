@@ -35,10 +35,10 @@ struct ContentView: View {
             isShowingPeersPage = true
         }
 
-        func randomizeName() {
+        func randomizeColor() {
             DittoManager.shared.ditto.store["cars"].findByID("honda")
                 .update { mutableDoc in
-                    mutableDoc?["name"].set(self.faker.lorem.word())
+                    mutableDoc?["color"].set(self.faker.lorem.word())
                 }
         }
 
@@ -65,8 +65,8 @@ struct ContentView: View {
             VStack(alignment: .leading) {
                 if let car = viewModel.car {
                     Text("_id: \(car["_id"].stringValue)")
-                    Text("name: \(car["name"].stringValue)")
-                    Text("mileage: \(car["mileage"].floatValue)")
+                    Text("color: \(car["color"].string ?? "color is missing and returning nil")")
+                    Text("mileage: \(car["mileage"].float ?? "mileage is missing and returning nil")")
                 } else {
                     Text("No car document, no value, no id")
                 }
@@ -79,8 +79,8 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
-                    Button("🔄 Name") {
-                        viewModel.randomizeName()
+                    Button("🔄 Color") {
+                        viewModel.randomizeColor()
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
