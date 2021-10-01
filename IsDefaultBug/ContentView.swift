@@ -26,9 +26,6 @@ struct ContentView: View {
                 .map{ $0.document }
                 .assign(to: \.car, on: self)
                 .store(in: &cancellables)
-
-            // bootstrap it with an
-            attemptInsertDefault()
         }
 
         func showPeersPage() {
@@ -45,7 +42,7 @@ struct ContentView: View {
         func randomizeMileage() {
             DittoManager.shared.ditto.store["cars"].findByID("honda")
                 .update { mutableDoc in
-                    mutableDoc?["mileage"].set(Float.random(in: 0..<1000000))
+                    mutableDoc?["mileage"].set(Int.random(in: 0..<1000000))
                 }
         }
 
@@ -66,7 +63,7 @@ struct ContentView: View {
                 if let car = viewModel.car {
                     Text("_id: \(car["_id"].stringValue)")
                     Text("color: \(car["color"].string ?? "nil")")
-                    if let mileage = car["mileage"].float {
+                    if let mileage = car["mileage"].int {
                         Text("mileage: \(mileage)")
                     } else {
                         Text("mileage: nil")
